@@ -1,0 +1,4 @@
+[dev]
+server1 java_pkg=java-1.8.0-openjdk
+server2 java_pkg=java-11-openjdk
+

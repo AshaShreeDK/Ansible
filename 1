@@ -1,0 +1,28 @@
+---
+- name: Install Java and print hostname: version
+  hosts: dev
+  become: yes
+
+  tasks:
+    - name: Install OpenJDK 1.8
+      ansible.builtin.yum:
+        name: java-1.8.0-openjdk
+        state: present
+
+    - name: Capture Java version
+      ansible.builtin.command: java -version
+      register: java_info
+      ignore_errors: yes
+
+    - name: Print hostname: version
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }}:
+          {{ (
+              java_info.stderr_lines[0] 
+              | regex_replace('.*"(.*)".*', '\\1')
+            )
+            if (java_info.stderr_lines is defined and java_info.stderr_lines | length > 0)
+            else 'not found'
+          }}
+

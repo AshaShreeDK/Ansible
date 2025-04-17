@@ -1,0 +1,19 @@
+---
+- name: Install Java and print version on all servers
+  hosts: dev
+  become: yes
+  tasks:
+    - name: Install Java (Amazon Corretto or OpenJDK)
+      ansible.builtin.yum:
+        name: java-1.8.0-openjdk
+        state: present
+
+    - name: Print Java version
+      ansible.builtin.shell: java -version
+      register: java_version_output
+      ignore_errors: yes
+
+    - name: Show Java version output
+      ansible.builtin.debug:
+        var: java_version_output.stderr_lines
+
